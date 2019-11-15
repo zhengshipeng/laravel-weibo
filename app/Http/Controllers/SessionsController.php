@@ -24,12 +24,22 @@ class SessionsController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->has('remember'))) {
             session()->flash('success', '欢迎回来');
             return redirect()->route('users.show', [Auth::user()]);
         } else {
             session()->flash('danger', '很抱歉，邮箱和密码不匹配');
             return redirect()->back()->withInput();
         }
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function destroy()
+    {
+        Auth::logout();
+        session()->flash('success', '您已成功退出');
+        return redirect('login');
     }
 }
