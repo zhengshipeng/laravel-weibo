@@ -39,6 +39,7 @@ class UsersController extends Controller
     }
 
     /**
+     * 个人资料
      * @param User $user
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -49,6 +50,7 @@ class UsersController extends Controller
     }
 
     /**
+     * 注册用户
      * @param Request $request
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -72,6 +74,7 @@ class UsersController extends Controller
     }
 
     /**
+     * 编辑用户资料页面
      * @param User $user
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Illuminate\Auth\Access\AuthorizationException
@@ -83,6 +86,7 @@ class UsersController extends Controller
     }
 
     /**
+     * 更新用户资料
      * @param User $user
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
@@ -109,6 +113,7 @@ class UsersController extends Controller
     }
 
     /**
+     * 删除用户-超级用户
      * @param User $user
      * @throws \Exception
      */
@@ -121,6 +126,7 @@ class UsersController extends Controller
     }
 
     /**
+     * 激活用户
      * @param $token
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -136,7 +142,33 @@ class UsersController extends Controller
         return redirect()->route('users.show', [$user]);
     }
 
+
     /**
+     * 关注列表
+     * @param User $user
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function followings(User $user)
+    {
+        $users = $user->followings()->paginate(30);
+        $title = $user->name . '关注的人';
+        return view('users.show_follow', compact('users', 'title'));
+    }
+
+    /**
+     * 粉丝列表
+     * @param User $user
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function followers(User $user)
+    {
+        $users = $user->followers()->paginate(30);
+        $title = $user->name . '的粉丝';
+        return view('users.show_follow', compact('users', 'title'));
+    }
+
+    /**
+     * 注册发送激活邮件
      * @param $user
      */
     protected function sendEmailConfirmationTo($user)
